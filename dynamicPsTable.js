@@ -202,23 +202,9 @@
             theadInfoAA.appendChild(basicInfo);
             //thead jobs
             let jobs = this.actionJobs.entries();
-            let dataColumn = 7;
+            let dataColumn = 4;
             let jobsRow = document.createElement('tr');
-            let sumaryHours = document.createElement('th');
-            sumaryHours.textContent = 'Hours';
-            sumaryHours.setAttribute('class', 'job-action');
-            sumaryHours.setAttribute('data-column', 4);
-            jobsRow.appendChild(sumaryHours);
-            let sumaryUnits = document.createElement('th');
-            sumaryUnits.textContent = 'Units';
-            sumaryUnits.setAttribute('class', 'job-action');
-            sumaryUnits.setAttribute('data-column', 5);
-            jobsRow.appendChild(sumaryUnits);
-            let sumaryUPH = document.createElement('th');
-            sumaryUPH.textContent = 'UPH';
-            sumaryUPH.setAttribute('class', 'job-action');
-            sumaryUPH.setAttribute('data-column', 6);
-            jobsRow.appendChild(sumaryUPH);
+
             let unitsUPH = document.createElement('tr');
             for (let [key,value] of jobs) {
                 let hours = document.createElement('th');
@@ -226,13 +212,18 @@
                 hours.setAttribute('class', 'job-action');
                 hours.setAttribute('data-column', dataColumn);
                 dataColumn += 1;
-                jobsRow.appendChild(hours);
-                let totalHours = document.createElement('th');
-                totalHours.textContent = 'Total';
-                totalHours.setAttribute('class', 'job-action');
-                totalHours.setAttribute('data-column', dataColumn-1);
-                unitsUPH.appendChild(totalHours);
-                value.jobs.unshift('Total');
+                unitsUPH.appendChild(hours);
+                let units = document.createElement('th');
+                units.textContent = 'Units';
+                units.setAttribute('class', 'job-action');
+                units.setAttribute('data-column', dataColumn);
+                let UPH = document.createElement('th');
+                UPH.textContent = 'UPH';
+                UPH.setAttribute('class', 'job-action');
+                UPH.setAttribute('data-column', dataColumn+1);
+                dataColumn += 2;
+                unitsUPH.appendChild(units);
+                unitsUPH.appendChild(UPH);
                 value.jobs.forEach((job)=>{
                     let jobName = document.createElement('th');
                     jobName.textContent = job;
@@ -259,22 +250,126 @@
             
         }
         createBodyTable(){
+        let tbody = document.createElement('tbody');
+        this.associates.forEach((aa)=>{
+            if(aa.getTotalHours() <= 1 || isNaN(aa.getTotalHours())) return;
+            let trAA = document.createElement('tr');
+            let tdType = document.createElement('td');
+            tdType.textContent = aa.type;
+            let tdId = document.createElement('td');
+            let aid = document.createElement('a');
+            aid.setAttribute('href', aa.href);
+            aid.textContent = aa.id;
+            tdId.appendChild(aid);
+            let tdName = document.createElement('td');
+            let aName = document.createElement('a');
+            aName.setAttribute('href', aa.href);
+            aName.textContent = aa.name;
+            tdName.appendChild(aName);
+            let tdManager = document.createElement('td');
+            tdManager.textContent = aa.manager;
+            trAA.appendChild(tdType);
+            trAA.appendChild(tdId);
+            trAA.appendChild(tdName);
+            trAA.appendChild(tdManager);
+            let hours = document.createElement('td');
+            hours.textContent = aa.getTotalHours() ;
+            trAA.appendChild(hours);
+            let totalUnits = document.createElement('td');
+            totalUnits.textContent = aa.getTotalUnits();
+            let totalUPH = document.createElement('td');
+            totalUPH.textContent = (aa.getTotalUnits()/aa.getTotalHours()).toFixed(2);
+            trAA.appendChild(totalUnits);
+            trAA.appendChild(totalUPH);
+            tbody.appendChild(trAA);
+            this.tableRender.appendChild(tbody);
+            let pathEntries = aa.jobs.entries();
+            for (let [key,value] of pathEntries) {
+                totalUPH.textContent = (aa.getUnitsByJob(key)/aa.getHourByJob(key)).toFixed(2);
+                trAA.appendChild(totalUnits);
+                trAA.appendChild(totalUPH);
+                let jobActions = value.entries();
+                for (let [job,unit] of jobActions) {
+                    let units = document.createElement('td');
+                    units.textContent = unit.units;
+                    let UPH = document.createElement('td');
+                    UPH.textContent = unit.UPH;
+                    trAA.appendChild(units);
+                    trAA.appendChild(UPH);
+                }
+            }
+        });
+        }
+        footerTable(){
+            let tfoot = document.createElement('tfoot');
+            let trFoot = document.createElement('tr');
+            trFoot.setAttribute('class', 'total empl-all');
+            let thFoot = document.createElement('th');
+            thFoot.textContent = 'Total';
+            thFoot.setAttribute('colspan', '4');
+            thFoot.setAttribute('data-column', '0');
+            // total elements   
+            let totalHours = document.createElement('td');
+            totalHours.setAttribute('data-column', '4');
+            totalHours.textContent = this.associates.reduce((acc, cur) => {
+                // Ensure that you return the accumulator after each iteration
+                return isNaN(cur.getTotalHours()) ? acc + 0 : acc + parseFloat(cur.getTotalHours());
+            }, 0).toFixed(2);
+            let totalUnits = document.createElement('td');
+            totalUnits.setAttribute('data-column', '5');
+            totalUnits.textContent = this.associates.reduce((acc,cur)=>acc+parseFloat(cur.getTotalUnits()),0);
+            let totalUPH = document.createElement('td');
+            totalUPH.setAttribute('data-column', '6');
+            totalUPH.textContent = (totalUnits.textContent/totalHours.textContent).toFixed(2) ;
+            trFoot.appendChild(thFoot);
+            trFoot.appendChild(totalHours);
+            trFoot.appendChild(totalUnits);
+            trFoot.appendChild(totalUPH);
+            let jobsT = this.actionJobs.entries();
+            let dataColumnT = 7;
+
+            for (let [key,value] of jobsT) {
+                let hours = document.createElement('td');
+                hours.setAttribute('data-column', dataColumnT);
+                hours.textContent = this.associates.reduce((acc,cur)=>{
+                return isNaN(cur.getHourByJob(value.name)) ? acc+0 : acc+parseFloat(cur.getHourByJob(value.name));
+                },0).toFixed(2);
+                value.jobs.forEach((job)=>{
+                    let totalUnits = document.createElement('td');
+                    totalUnits.setAttribute('data-column', dataColumnT+1);
+                    totalUnits.textContent = this.associates.reduce((acc,cur)=>{
+                        return isNaN(cur.getUnitsBySingleJob(value.name,job))?acc+=0:acc+cur.getUnitsBySingleJob(value.name,job);
+                    },0);
+                    let totalUPH = document.createElement('td');
+                    totalUPH.setAttribute('data-column', dataColumnT+2);
+                    totalUPH.textContent = (totalUnits.textContent/hours.textContent).toFixed(2);
+                    trFoot.appendChild(totalUnits);
+                    trFoot.appendChild(totalUPH);
+                    dataColumnT += 2;
+                });
+            }
+            
+
+            tfoot.appendChild(trFoot);
+            this.tableRender.appendChild(tfoot);
 
         }
-
         renderSingleTable(){
             const parent = document.querySelector('.main-panel') ;
             this.tableRender = document.createElement('table');
             this.createHeaderTable(this.associates[0].path);
+            this.createBodyTable();
+            this.footerTable();
             parent.insertBefore(this.tableRender,parent.childNodes[40]) 
         
         }
 
     }
     const cRetPSTable = new AmazonAssociateTable('function-4300006654');
-    const addinsPS = new AmazonAssociateTable('function-1599235212848');
-    cRetPSTable.mergeTables(addinsPS);
+ //   const addinsPS = new AmazonAssociateTable('function-1599235212848');
+ //   cRetPSTable.mergeTables(addinsPS);
     cRetPSTable.renderSingleTable();
+
     const parent = document.querySelector('.main-panel') ;
     const table = document.createElement('table');
 
