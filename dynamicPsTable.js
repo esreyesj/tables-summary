@@ -10,6 +10,9 @@
 
 (function() {
     'use strict';
+    function clearElement(element){
+        element.innerHTML = '';
+    }
     class AmazonAssociate {
         constructor(type, id, name, manager, hours, rate, path,href) {
             this.type = type;
@@ -168,8 +171,10 @@
             const info = ['Type','ID','Name','Manager'];
             info.forEach((el,index)=>{
                 let type = document.createElement('th');
-                type.textContent = el;
-                type.setAttribute('class', 'tablesorter-header-inner');
+                let auxDiv = document.createElement('div');
+                auxDiv.setAttribute('class', 'tablesorter-header-inner');
+                auxDiv.textContent = el;
+                type.appendChild(auxDiv);
                 type.setAttribute('rowspan', '3');
                 type.setAttribute('data-column', index);
                 type.setAttribute('tabindex', '0');
@@ -363,19 +368,38 @@
             parent.insertBefore(this.tableRender,parent.childNodes[40]) 
         
         }
+        orderByUPH(){
+            this.associates.sort((a, b) => (parseFloat(a.getTotalUPH()) < parseFloat(b.getTotalUPH())) ? 1 : -1);
+            clearElement(this.tableRender);
+            this.renderSingleTable();
+        }
+
+        orderByManager(){
+            this.associates.sort((a, b) => (a.manager > b.manager) ? 1 : -1);
+            clearElement(this.tableRender);
+            this.renderSingleTable();
+        }
+        orderByTotalUnits(){
+            this.associates.sort((a, b) => (a.getTotalUnits() < b.getTotalUnits()) ? 1 : -1);
+            clearElement(this.tableRender);
+            this.renderSingleTable();
+        }
+        orderByTotalHours(){
+            this.associates.sort((a, b) => (a.getTotalHours() > b.getTotalHours()) ? 1 : -1);
+            clearElement(this.tableRender);
+            this.renderSingleTable();
+        }
 
     }
     const cRetPSTable = new AmazonAssociateTable('function-4300006654');
  //   const addinsPS = new AmazonAssociateTable('function-1599235212848');
  //   cRetPSTable.mergeTables(addinsPS);
     cRetPSTable.renderSingleTable();
+    cRetPSTable.orderByManager();
 
     const parent = document.querySelector('.main-panel') ;
     const table = document.createElement('table');
 
-    function clearElement(element){
-        element.innerHTML = '';
-    }
     function headerTable(){
             table.setAttribute('class', 'sortable result-table align-left tablesorter tablesorter-default tablesorter2ef6169fcbdc2');
             table.setAttribute('id', 'mergedTable');
