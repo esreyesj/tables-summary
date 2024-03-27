@@ -50,7 +50,14 @@
             }
             return total;
         }
-
+        getUnitsByPath(path) {
+            // Method implementation
+            let total = 0;
+            this.jobs.get(this.path).get(path).units === '' ? total += 0 :
+                total += parseInt(this.jobs.get(this.path).get(path).units);
+            console.log(total  )
+            return total;
+        }
         getUnitsBySingleJob(job,path) { 
             // Method implementation
             let total = 0;
@@ -112,7 +119,13 @@
             this.associates = [];
             this.curhours = 1;
             this.fillAssociates();
-
+            this.ascManager = false;
+            this.ascHours = false;
+            this.ascUnits = false;
+            this.ascUPH = false;
+            this.ascPathUnits = false;
+            this.ascPathUPH = false;
+            this.ascName = false;
         }
 
         fillAssociates() {
@@ -174,6 +187,11 @@
                 let auxDiv = document.createElement('div');
                 auxDiv.setAttribute('class', 'tablesorter-header-inner');
                 auxDiv.textContent = el;
+                auxDiv.addEventListener('click', () => {
+                   if(el==='Manager') this.orderByManager();
+                   else if(el==='Name') this.orderByName();
+                   else if(el==='ID') this.orderByID();
+                });
                 type.appendChild(auxDiv);
                 type.setAttribute('rowspan', '3');
                 type.setAttribute('data-column', index);
@@ -216,16 +234,19 @@
                 hours.textContent = 'Paid Hours';
                 hours.setAttribute('class', 'job-action');
                 hours.setAttribute('data-column', dataColumn);
+                hours.addEventListener('click', ()=>{this.orderByTotalHours()});
                 dataColumn += 1;
                 unitsUPH.appendChild(hours);
                 let units = document.createElement('th');
                 units.textContent = 'Units';
                 units.setAttribute('class', 'job-action');
                 units.setAttribute('data-column', dataColumn);
+                units.addEventListener('click', ()=>{this.orderByTotalUnits()});
                 let UPH = document.createElement('th');
                 UPH.textContent = 'UPH';
                 UPH.setAttribute('class', 'job-action');
                 UPH.setAttribute('data-column', dataColumn+1);
+                UPH.addEventListener('click', ()=>{this.orderByUPH()});
                 dataColumn += 2;
                 unitsUPH.appendChild(units);
                 unitsUPH.appendChild(UPH);
@@ -240,10 +261,16 @@
                     units.textContent = 'Units';
                     units.setAttribute('class', 'job-action');
                     units.setAttribute('data-column', dataColumn);
+                    units.addEventListener('click', ()=> {
+                        this.orderByPathUnits(job);
+                    });
                     let UPH = document.createElement('th');
                     UPH.textContent = 'UPH';
                     UPH.setAttribute('class', 'job-action');
                     UPH.setAttribute('data-column', dataColumn+1);
+                    UPH.addEventListener('click', ()=> {
+                        this.orderByPathUPH(job);
+                    });
                     dataColumn += 2;
                     unitsUPH.appendChild(units);
                     unitsUPH.appendChild(UPH);
@@ -369,23 +396,65 @@
         
         }
         orderByUPH(){
-            this.associates.sort((a, b) => (parseFloat(a.getTotalUPH()) < parseFloat(b.getTotalUPH())) ? 1 : -1);
+            !this.ascUPH?
+            this.associates.sort((a, b) => (parseFloat(a.getTotalUPH()) < parseFloat(b.getTotalUPH())) ? 1 : -1):
+            this.associates.sort((a, b) => (parseFloat(a.getTotalUPH()) > parseFloat(b.getTotalUPH())) ? 1 : -1);
             clearElement(this.tableRender);
             this.renderSingleTable();
         }
-
+        orderByName(){
+            !this.ascName?
+            this.associates.sort((a, b) => (a.name > b.name) ? 1 : -1):
+            this.associates.sort((a, b) => (a.name < b.name) ? 1 : -1);
+            this.ascName = !this.ascName;
+            clearElement(this.tableRender);
+            this.renderSingleTable();
+        }
         orderByManager(){
-            this.associates.sort((a, b) => (a.manager > b.manager) ? 1 : -1);
+            !this.ascManager?
+            this.associates.sort((a, b) => (a.manager > b.manager) ? 1 : -1):
+            this.associates.sort((a, b) => (a.manager < b.manager) ? 1 : -1);
+            this.ascManager = !this.ascManager;
+            clearElement(this.tableRender);
+            this.renderSingleTable();
+        }
+        orderByID(){
+            !this.ascID?
+            this.associates.sort((a, b) => (a.id > b.id) ? 1 : -1):
+            this.associates.sort((a, b) => (a.id < b.id) ? 1 : -1);
+            this.ascID = !this.ascID;
             clearElement(this.tableRender);
             this.renderSingleTable();
         }
         orderByTotalUnits(){
-            this.associates.sort((a, b) => (a.getTotalUnits() < b.getTotalUnits()) ? 1 : -1);
+            !this.ascUnits?
+            this.associates.sort((a, b) => (a.getTotalUnits() < b.getTotalUnits()) ? 1 : -1):
+            this.associates.sort((a, b) => (a.getTotalUnits() > b.getTotalUnits()) ? 1 : -1);
+            this.ascUnits = !this.ascUnits;
             clearElement(this.tableRender);
             this.renderSingleTable();
         }
         orderByTotalHours(){
-            this.associates.sort((a, b) => (a.getTotalHours() > b.getTotalHours()) ? 1 : -1);
+            !this.ascHours?
+            this.associates.sort((a, b) => (parseFloat(a.getTotalHours()) < parseFloat(b.getTotalHours())) ? 1 : -1):
+            this.associates.sort((a, b) => (parseFloat(a.getTotalHours()) > parseFloat(b.getTotalHours())) ? 1 : -1);
+            this.ascHours = !this.ascHours;
+            clearElement(this.tableRender);
+            this.renderSingleTable();
+        }
+        orderByPathUnits(path){
+            this.ascPathUnits?
+            this.associates.sort((a, b) => (a.getUnitsByPath(path) < b.getUnitsByPath(path)) ? 1 : -1):
+            this.associates.sort((a, b) => (a.getUnitsByPath(path) > b.getUnitsByPath(path)) ? 1 : -1);
+            this.ascPathUnits = !this.ascPathUnits;
+            clearElement(this.tableRender);
+            this.renderSingleTable();
+        }
+        orderByPathUPH(path){
+            this.ascPathUPH?
+            this.associates.sort((a, b) => (parseFloat(a.getUnitsByPath(path)/a.getTotalHours()) < parseFloat(b.getUnitsByPath(path)/b.getTotalHours())) ? 1 : -1):
+            this.associates.sort((a, b) => (parseFloat(a.getUnitsByPath(path)/a.getTotalHours()) > parseFloat(b.getUnitsByPath(path)/b.getTotalHours())) ? 1 : -1);
+            this.ascPathUPH = !this.ascPathUPH;
             clearElement(this.tableRender);
             this.renderSingleTable();
         }
@@ -395,7 +464,7 @@
  //   const addinsPS = new AmazonAssociateTable('function-1599235212848');
  //   cRetPSTable.mergeTables(addinsPS);
     cRetPSTable.renderSingleTable();
-    cRetPSTable.orderByManager();
+    cRetPSTable.orderByTotalHours();
 
     const parent = document.querySelector('.main-panel') ;
     const table = document.createElement('table');
