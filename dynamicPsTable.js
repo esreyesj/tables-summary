@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name         Change Background Color
+// @name         Problem Solve Rate Table Summary
 // @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  Change background color to red
-// @author       Your name
-// @match        https://example.com/*
+// @version      1.0
+// @description  Check AA rates
+// @inject-into auto
+// @author       Esteban Reyes
+// @include       https://fclm-portal.amazon.com/reports/functionRollup?reportFormat=HTML&warehouseId=*&processId=1003058*
 // @grant        none
 // ==/UserScript==
 
@@ -45,7 +46,6 @@
         }
         // This method itinerates over and returns the total units in a especific job
         getUnitsByJob(job) {
-            // Method implementation
             let total = 0;
             if(!this.jobs.get(job))return 0;
             let entries = this.jobs.get(job).entries();
@@ -57,16 +57,13 @@
         }
         // This method itinerates over and returns the total units in a especific path
         getUnitsByPath(path) {
-            // Method implementation
             let total = 0;
             this.jobs.get(this.path).get(path).units === '' ? total += 0 :
                 total += parseInt(this.jobs.get(this.path).get(path).units);
-            console.log(total  )
             return total;
         }
         // This method itinerates over and returns the total units in a especific job and path
         getUnitsBySingleJob(job,path) { 
-            // Method implementation
             let total = 0;
             if(path === 'Total') return  this.getUnitsByJob(job)
             if(!this.jobs.get(job))return 0;
@@ -76,13 +73,11 @@
         }
         // This method itinerates over and returns the total hours in a especific job
         getHourByJob(job) {
-            // Method implementation
             if (!this.hours.get(job)) return 0;
             return this.hours.get(job).hours;
         }
         // Gets the total units per hour
         getTotalUPH() {
-            // Method implementation
             if(!this.getTotalHours())return 0;
             return (this.getTotalUnits()/this.getTotalHours()).toFixed(2);
         }
@@ -426,12 +421,9 @@
             parent.insertBefore(this.tableRender,parent.childNodes[39]) 
         
         }
-        toggleAscDesc(booleanAsc,querySelector){
-            booleanAsc = !booleanAsc;
-            const element = document.querySelector(querySelector);
-            console.log(element)
-            booleanAsc? element.className ='tablesorter-sortableHeader tablesorter-header tablesorter-headerAsc':
-            element.className ='tablesorter-sortableHeader tablesorter-header tablesorter-headerDesc';
+        toggleAscDesc(booleanAcs){
+            return booleanAcs ? 'tablesorter-sortableHeader tablesorter-header tablesorter-headerAsc' 
+            : 'tablesorter-sortableHeader tablesorter-header tablesorter-headerDesc';
         }
 
         orderByUPH(){
@@ -442,8 +434,7 @@
             clearElement(this.tableRender);
             this.renderSingleTable();
             const element = document.querySelector('#UPH');
-            this.ascUPH? element.className ='tablesorter-sortableHeader tablesorter-header tablesorter-headerAsc':
-            element.className ='tablesorter-sortableHeader tablesorter-header tablesorter-headerDesc';
+            element.className = this.toggleAscDesc(this.ascUPH);
         }
         orderByName(){
             !this.ascName?
