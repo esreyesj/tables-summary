@@ -12,6 +12,7 @@
 
 (function() {
     'use strict';
+    // This function clears the element
     function clearElement(element){
         //delete all children from element
         element.remove();
