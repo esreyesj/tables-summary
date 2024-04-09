@@ -12,12 +12,10 @@
 
 (function() {
     'use strict';
-
     function clearElement(element){
         //delete all children from element
         element.remove();
     }
-
     // Amazaon Associate Class
     class AmazonAssociate {
         constructor(type, id, name, manager, hours, rate, path,href) {
@@ -542,7 +540,6 @@
 
     }
 
-
     function main() {
         const cRetPSTable = new AmazonAssociateTable('function-4300006654');
         cRetPSTable.renderSingleTable();
@@ -555,5 +552,4 @@
         // The document is already ready, so run the script immediately
         main();
     }
-
 })();
