@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name         Problem Solve Rate Table Summary
+// @name         Summay Tables for PS function rollup
 // @namespace    http://tampermonkey.net/
 // @version      1.0
-// @description  Check AA rates
-// @inject-into auto
+// @description  try to take over the world!
 // @author       Esteban Reyes
+// @inject-into auto
 // @include       https://fclm-portal.amazon.com/reports/functionRollup?reportFormat=HTML&warehouseId=*&processId=1003058*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.dev
 // @grant        none
 // ==/UserScript==
 
