@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Summay Tables for PS function rollup
+// @name         Problem Solve Rate Summary Table
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  try to take over the world!
