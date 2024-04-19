@@ -203,8 +203,8 @@
                     });
                     emp.jobs.set(secondTable.caption.childNodes[0].textContent.replace(/\n/g, ''),newJobMapping);
                 }
-                this.rateChecked?this.checkRates():null;
             });
+            this.rateChecked?this.checkRates():null;
         }
         // create the header of the table
         createHeaderTable(name){
