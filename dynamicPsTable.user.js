@@ -204,6 +204,7 @@
                     emp.jobs.set(secondTable.caption.childNodes[0].textContent.replace(/\n/g, ''),newJobMapping);
                 }
             });
+            this.rateChecked?this.checkRates():null;
             console.log(this.associates);
         }
         // create the header of the table
@@ -472,8 +473,7 @@
             this.createHeaderTable(this.associates[0].path);
             this.createBodyTable();
             this.footerTable();
-            parent.insertBefore(this.tableRender,parent.childNodes[pointerIndex+1]); 
-            this.rateChecked?this.checkRates():null;      
+            parent.insertBefore(this.tableRender,parent.childNodes[pointerIndex+1]);      
         }
         toggleAscDesc(booleanAcs){
             return booleanAcs ? 'tablesorter-sortableHeader tablesorter-header tablesorter-headerAsc' 
@@ -591,8 +591,7 @@
             });
             clearElement(this.tableRender);
             this.renderSingleTable();
-            this.rateChecked?this.rateChecked = false:
-            this.rateChecked = true;
+            this.rateChecked?this.rateChecked = false:this.rateChecked = true;
         }
         addAATable(AAtable){
             this.mergeTables(AAtable);
