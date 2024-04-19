@@ -395,7 +395,8 @@
                     this.tableRender.appendChild(tbody);
                    this.actionJobs.forEach((job)=>{
                         console.log(job)
-                        let pathEntries = aa.jobs.get(job).entries();
+                        console.log(aa);
+                        let pathEntries = aa.jobs.get(job.name).entries();
                         for (let [job,unit] of pathEntries) {
                             let units = document.createElement('td');
                             units.textContent = unit.units;
