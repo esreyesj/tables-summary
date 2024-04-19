@@ -150,6 +150,7 @@
             this.ascID = false;
             this.ascType = false;
             this.addTable = false;
+            this.rateChecked = false;
         }
 
         fillAssociates() {
@@ -472,6 +473,7 @@
             this.createBodyTable();
             this.footerTable();
             parent.insertBefore(this.tableRender,parent.childNodes[pointerIndex+1]); 
+            this.rateChecked?this.checkRates():null;
         
         }
         toggleAscDesc(booleanAcs){
@@ -590,6 +592,7 @@
             });
             clearElement(this.tableRender);
             this.renderSingleTable();
+            this.rateChecked = true;
         }
         addAATable(AAtable){
             this.mergeTables(AAtable);
