@@ -150,10 +150,6 @@
             this.ascID = false;
             this.ascType = false;
             this.addTable = false;
-            this.offsetX = false;
-            this.offsetY = false;
-            this.isDragging = false;
-            this.dragBox = null;
         }
 
         fillAssociates() {
@@ -215,8 +211,6 @@
             this.tableRender.id = 'sumaryTable';
             //element caption
             let caption = document.createElement('caption');
-            caption.style.maxHeight = '22.7px';
-            caption.style.overflow = 'hidden';
             caption.textContent = `${name} Summary`;
             //element span filter
             let span = document.createElement('span');
