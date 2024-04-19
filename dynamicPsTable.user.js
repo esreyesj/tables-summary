@@ -393,8 +393,9 @@
                     trAA.appendChild(totalUPH);
                     tbody.appendChild(trAA);
                     this.tableRender.appendChild(tbody);
-                   this.actionJobs.forEach((job)=>{ 
-                        let pathEntries = aa.jobs.get(job.name).entries();
+                   this.actionJobs.forEach((job)=>{
+                        console.log(job)
+                        let pathEntries = aa.jobs.get(job).entries();
                         for (let [job,unit] of pathEntries) {
                             let units = document.createElement('td');
                             units.textContent = unit.units;
