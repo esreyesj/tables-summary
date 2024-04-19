@@ -150,6 +150,7 @@
             this.ascID = false;
             this.ascType = false;
             this.addTable = false;
+            this.rateChecked = false;
         }
 
         fillAssociates() {
@@ -203,7 +204,7 @@
                     emp.jobs.set(secondTable.caption.childNodes[0].textContent.replace(/\n/g, ''),newJobMapping);
                 }
             });
-            console.log(this.associates);
+            this.rateChecked?this.checkRates():null;
         }
         // create the header of the table
         createHeaderTable(name){
@@ -587,6 +588,7 @@
                 }
             });
             clearElement(this.tableRender);
+            this.rateChecked = true;
             this.renderSingleTable();
         }
         addAATable(AAtable){
