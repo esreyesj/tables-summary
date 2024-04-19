@@ -150,7 +150,6 @@
             this.ascID = false;
             this.ascType = false;
             this.addTable = false;
-            this.rateChecked = false;
         }
 
         fillAssociates() {
@@ -588,7 +587,6 @@
                 }
             });
             clearElement(this.tableRender);
-            this.rateChecked = true;
             this.renderSingleTable();
         }
         addAATable(AAtable){
