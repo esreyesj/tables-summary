@@ -473,8 +473,7 @@
             this.createBodyTable();
             this.footerTable();
             parent.insertBefore(this.tableRender,parent.childNodes[pointerIndex+1]); 
-            this.rateChecked?this.checkRates():null;
-        
+            this.rateChecked?this.checkRates():null;      
         }
         toggleAscDesc(booleanAcs){
             return booleanAcs ? 'tablesorter-sortableHeader tablesorter-header tablesorter-headerAsc' 
@@ -592,6 +591,7 @@
             });
             clearElement(this.tableRender);
             this.renderSingleTable();
+            this.rateChecked?this.rateChecked = false:
             this.rateChecked = true;
         }
         addAATable(AAtable){
